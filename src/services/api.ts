@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export async function analyzeUrl(newsUrl: string, userId?: string) {
-  const res = await fetch(`${API_URL}/analyze-url`, {
+  const res = await fetch(`${API_URL}/api/analyze-url`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
