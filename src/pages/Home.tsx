@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import UrlForm from '../components/UrlForm';
 import { analyzeUrl } from '../services/api';
+import type { NewsResultType } from '../types/NewsType';
 
 function getTodayKey() {
   return `analyze_count_${new Date().toISOString().slice(0, 10)}`;
@@ -20,7 +21,8 @@ function setCookie(name: string, value: string, days: number) {
 }
 
 export default function Home() {
-  const [result, setResult] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<NewsResultType | null>(null);
 
   const handleSubmit = async (url: string) => {
     const key = getTodayKey();
@@ -31,12 +33,18 @@ export default function Home() {
       return;
     }
 
+    setLoading(true);
+    setResult(null);
+
     try {
       const data = await analyzeUrl(url);
       setResult(data);
       setCookie(key, String(currentCount + 1), 1);
     } catch (err) {
+      console.error(err);
       alert('분석에 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,23 +55,62 @@ export default function Home() {
           📰 뉴스 요약 분석기
         </h1>
 
-        <UrlForm onSubmit={handleSubmit}/>
+        <UrlForm onSubmit={handleSubmit} />
+
+        {loading && <p className="text-gray-500 mt-4">요약 중입니다...</p>}
 
         {result && (
-          <div className="mt-6 space-y-4">
-            <h2 className="text-xl font-semibold text-gray-700">{result.title}</h2>
-            <p className="text-gray-600">{result.summary}</p>
-            <p className="text-sm text-gray-500">주제: {result.topic}</p>
-            <div className="flex flex-wrap gap-2">
-              {result.keywords.map((k: string) => (
-                <span
-                  key={k}
-                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-                >
+          <div className="mt-6 space-y-6 border-t pt-6">
+            {/* 주제 */}
+            {result.topic && (
+              <p className="text-sm text-gray-600 mb-1">
+                {result.topic}
+              </p>
+            )}
+
+            {/* 제목 */}
+            {result.title && (
+              <h2 className="text-2xl font-bold text-gray-900">
+                {result.title}
+              </h2>
+            )}
+
+            {/* 요약 */}
+            {result.summary && (
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-gray-800 whitespace-pre-line leading-relaxed">
+                  {result.summary}
+                </p>
+              </div>
+            )}
+
+            {/* 키워드 */}
+            {Array.isArray(result.keywords) && result.keywords.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {result.keywords.map((k: string, i: number) => (
+                  <span
+                    key={i}
+                    className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                  >
                   #{k}
                 </span>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
+
+            {/* 원문 링크 */}
+            {result.url && (
+              <div className="mt-2">
+                <a
+                  href={result.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  👉 원문 기사 보기
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
