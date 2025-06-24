@@ -9,6 +9,7 @@ export default function UrlForm({onSubmit}: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // TODO: 서버에서 분기처리 되면 URL 로직 제거
     if (!url.startsWith('https://n.news.naver.com/')) {
       alert('네이버 뉴스만 요약 가능합니다.');
       return;

@@ -10,10 +10,5 @@ export async function analyzeUrl(newsUrl: string, userId?: string) {
     },
     body: JSON.stringify({url: newsUrl, userId}),
   });
-
-  if (!res.ok) {
-    throw new Error('서버 요청 실패');
-  }
-
-  return res.json();
+  return res;
 }

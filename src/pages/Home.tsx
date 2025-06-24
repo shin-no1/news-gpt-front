@@ -37,12 +37,17 @@ export default function Home() {
     setResult(null);
 
     try {
-      const data = await analyzeUrl(url);
+      const res = await analyzeUrl(url);
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.message || '알 수 없는 오류가 발생했습니다.');
+        return;
+      }
       setResult(data);
       setCookie(key, String(currentCount + 1), 1);
     } catch (err) {
       console.error(err);
-      alert('분석에 실패했습니다.');
+      alert('서버와 통신 중 문제가 발생했습니다.');
     } finally {
       setLoading(false);
     }
