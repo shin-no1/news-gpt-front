@@ -3,36 +3,11 @@ import UrlForm from '../components/UrlForm';
 import { analyzeUrl } from '../services/api';
 import type { NewsResultType } from '../types/NewsType';
 
-function getTodayKey() {
-  return `analyze_count_${new Date().toISOString().slice(0, 10)}`;
-}
-
-function getCookie(name: string): string | null {
-  const value = document.cookie
-    .split('; ')
-    .find((row) => row.startsWith(name + '='));
-  return value ? decodeURIComponent(value.split('=')[1]) : null;
-}
-
-function setCookie(name: string, value: string, days: number) {
-  const expires = new Date();
-  expires.setDate(expires.getDate() + days);
-  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/`;
-}
-
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<NewsResultType | null>(null);
 
   const handleSubmit = async (url: string) => {
-    const key = getTodayKey();
-    const currentCount = parseInt(getCookie(key) || '0');
-
-    if (currentCount >= 5) {
-      alert('비회원은 하루 최대 5회까지 분석할 수 있습니다.');
-      return;
-    }
-
     setLoading(true);
     setResult(null);
 
@@ -44,7 +19,6 @@ export default function Home() {
         return;
       }
       setResult(data);
-      setCookie(key, String(currentCount + 1), 1);
     } catch (err) {
       console.error(err);
       alert('서버와 통신 중 문제가 발생했습니다.');
