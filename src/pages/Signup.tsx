@@ -13,6 +13,8 @@ export default function Signup() {
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [nicknameValid, setNicknameValid] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
+  const [isSending, setIsSending] = useState(false);
 
   const isEmailValid = (email: string) =>
     email.endsWith('@kakao.com') || email.endsWith('@naver.com');
@@ -33,11 +35,24 @@ export default function Signup() {
     setNicknameValid(isNicknameValid(nickname));
   }, [password, passwordConfirm, nickname]);
 
+  useEffect(() => {
+    if (resendTimer > 0 && !codeVerified) {
+      const timer = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [resendTimer, codeVerified]);
+
   const sendEmailCode = async () => {
+    if (isSending || codeVerified || resendTimer > 0) return;
+
     if (!isEmailValid(email)) {
       alert('이메일은 naver.com 또는 kakao.com 도메인만 사용 가능합니다.');
       return;
     }
+
+    setIsSending(true);
     try {
       const res = await sendEmailCodeApi(email);
       if (!res.ok) {
@@ -47,8 +62,11 @@ export default function Signup() {
       }
       alert('인증번호가 이메일로 발송되었습니다.');
       setCodeSent(true);
+      setResendTimer(120);
     } catch {
       alert('이메일 인증번호 발송 실패');
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -62,6 +80,7 @@ export default function Signup() {
       }
       setCodeVerified(true);
       setVerificationError('');
+      setResendTimer(0);
       alert('이메일 인증 완료');
     } catch {
       setCodeVerified(false);
@@ -142,17 +161,27 @@ export default function Signup() {
 
       <div className="flex gap-2 mb-2">
         <input
-          className="flex-1 px-4 py-2 border rounded"
+          className={`flex-1 px-4 py-2 border rounded ${codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
           placeholder="이메일"
           value={email}
           onChange={(e) => setEmail(e.target.value.replace(/\s/g, ''))}
+          disabled={codeVerified}
         />
         <button
           type="button"
-          className="bg-green-500 text-white px-3 rounded"
           onClick={sendEmailCode}
+          disabled={isSending || codeVerified || resendTimer > 0}
+          className={`text-white px-3 rounded ${
+            codeVerified || resendTimer > 0 || isSending
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-green-500 hover:bg-green-600'
+          }`}
         >
-          인증번호 받기
+          {codeVerified
+            ? '인증 완료'
+            : resendTimer > 0
+              ? `${resendTimer}초 후 재전송`
+              : '인증번호 받기'}
         </button>
       </div>
       <p className="text-sm text-gray-500 mb-2">※ 이메일은 kakao.com / naver.com 만 가능합니다.</p>
@@ -161,15 +190,17 @@ export default function Signup() {
         <div className="mb-4">
           <div className="flex gap-2 mb-1">
             <input
-              className="flex-1 px-4 py-2 border rounded"
+              className={`flex-1 px-4 py-2 border rounded ${codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
               placeholder="인증번호 입력"
               value={emailCode}
               onChange={(e) => setEmailCode(e.target.value)}
+              disabled={codeVerified}
             />
             <button
               type="button"
-              className="bg-blue-500 text-white px-3 rounded"
+              className={`px-3 rounded text-white ${codeVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500'}`}
               onClick={verifyEmailCode}
+              disabled={codeVerified}
             >
               인증 확인
             </button>
