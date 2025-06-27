@@ -90,6 +90,7 @@ export default function Signup() {
       alert('이메일 인증을 완료해주세요.');
       return;
     }
+
     try {
       const res = await signupApi(email, nickname, password);
       if (!res.ok) {
@@ -111,7 +112,7 @@ export default function Signup() {
         className="w-full mb-1 px-4 py-2 border rounded"
         placeholder="아이디 (닉네임)"
         value={nickname}
-        onChange={(e) => setNickname(e.target.value)}
+        onChange={(e) => setNickname(e.target.value.replace(/\s/g, ''))}
       />
       <p className={`text-sm mb-3 ${nickname ? (nicknameValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'}`}>
         {nickname ? (nicknameValid ? '사용 가능한 아이디입니다.' : '아이디는 영문, 숫자, 밑줄(_) 조합 3~16자여야 합니다.') : '아이디를 입력해주세요.'}
@@ -144,7 +145,7 @@ export default function Signup() {
           className="flex-1 px-4 py-2 border rounded"
           placeholder="이메일"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.replace(/\s/g, ''))}
         />
         <button
           type="button"
