@@ -1,14 +1,13 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-export async function analyzeUrl(newsUrl: string, userId?: string) {
+export async function analyzeUrl(url: string, accessToken: string | null, login: boolean) {
   return await fetch(`${API_URL}/api/news/analyze-url`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // 추후 로그인 토큰 헤더 추가 가능
-      // ...(token && { Authorization: `Bearer ${token}` }),
+      Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify({url: newsUrl, userId}),
+    body: JSON.stringify({url, login}),
   });
 }
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { meApi } from "../services/UserApi";
 import NavBar from "./NavBar";
-import { getDeviceId, handleLogout } from "../utils/Auth";
-import { reissueApi } from "../services/AuthApi";
+import { handleLogout, reissueToken } from "../utils/Auth";
 
 export function Home() {
   const [userId, setUserId] = useState('');
@@ -16,7 +15,6 @@ export function Home() {
 
       if (res.status === 401) {
         setIsLoggedIn(false);
-        console.log("fetchUser ERROR")
         await reissueToken(fetchUser);
         return;
       }
@@ -91,27 +89,4 @@ export function Home() {
       </div>
     </div>
   );
-}
-
-async function reissueToken(retryCallback?: () => void) {
-  try {
-    const refreshToken = localStorage.getItem('refreshToken');
-    const deviceId = getDeviceId();
-    const res = await reissueApi(refreshToken, deviceId);
-
-    if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.message || '알 수 없는 오류가 발생했습니다.');
-    }
-
-    const data = await res.json();
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-
-    if (retryCallback) retryCallback(); // 토큰 재발급 성공했을 때만 재시도
-  } catch {
-    alert('세션이 만료되어 로그인 페이지로 이동합니다.');
-    localStorage.clear();
-    window.location.href = '/';
-  }
 }

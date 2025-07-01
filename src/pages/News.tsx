@@ -4,6 +4,7 @@ import UrlForm from '../components/UrlForm';
 import { analyzeUrl } from '../services/api';
 import type { NewsResultType } from '../types/NewsType';
 import NavBar from "./NavBar";
+import { reissueToken } from "../utils/Auth";
 
 export default function News() {
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,14 @@ export default function News() {
     setResult(null);
 
     try {
-      const res = await analyzeUrl(url);
+      const accessToken = localStorage.getItem('accessToken');
+      const res = await analyzeUrl(url, accessToken, !!accessToken);
+
+      if (res.status === 401) {
+        await reissueToken(() => handleSubmit(url));
+        return;
+      }
+
       const data = await res.json();
       if (!res.ok) {
         alert(data.message || '알 수 없는 오류가 발생했습니다.');
