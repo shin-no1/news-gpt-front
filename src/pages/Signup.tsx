@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { sendEmailCodeApi, verifyEmailCodeApi, signupApi } from '../services/api';
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
@@ -117,7 +119,8 @@ export default function Signup() {
         alert(data.message || '알 수 없는 오류가 발생했습니다.');
         return;
       }
-      alert('회원가입이 완료되었습니다!');
+      alert('회원가입이 완료되었습니다. 로그인해주세요.');
+      navigate('/login');
     } catch {
       alert('회원가입 실패');
     }
