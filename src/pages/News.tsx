@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown";
 import { useState } from 'react';
 import UrlForm from '../components/UrlForm';
 import { analyzeUrl } from '../services/api';
@@ -28,74 +29,6 @@ export default function News() {
     }
   };
 
-  // return (
-  //   <div className="min-h-screen bg-gray-50 p-8">
-  //     <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-  //       <h1 className="text-2xl font-bold mb-6 text-gray-800">
-  //         📰 뉴스 요약 분석기
-  //       </h1>
-  //
-  //       <UrlForm onSubmit={handleSubmit} />
-  //
-  //       {loading && <p className="text-gray-500 mt-4">요약 중입니다...</p>}
-  //
-  //       {result && (
-  //         <div className="mt-6 space-y-6 border-t pt-6">
-  //           {/* 주제 */}
-  //           {result.topic && (
-  //             <p className="text-sm text-gray-600 mb-1">
-  //               {result.topic}
-  //             </p>
-  //           )}
-  //
-  //           {/* 제목 */}
-  //           {result.title && (
-  //             <h2 className="text-2xl font-bold text-gray-900">
-  //               {result.title}
-  //             </h2>
-  //           )}
-  //
-  //           {/* 요약 */}
-  //           {result.summary && (
-  //             <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
-  //               <p className="text-gray-800 whitespace-pre-line leading-relaxed">
-  //                 {result.summary}
-  //               </p>
-  //             </div>
-  //           )}
-  //
-  //           {/* 키워드 */}
-  //           {Array.isArray(result.keywords) && result.keywords.length > 0 && (
-  //             <div className="flex flex-wrap gap-2">
-  //               {result.keywords.map((k: string, i: number) => (
-  //                 <span
-  //                   key={i}
-  //                   className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-  //                 >
-  //                 #{k}
-  //               </span>
-  //               ))}
-  //             </div>
-  //           )}
-  //
-  //           {/* 원문 링크 */}
-  //           {result.url && (
-  //             <div className="mt-2">
-  //               <a
-  //                 href={result.url}
-  //                 target="_blank"
-  //                 rel="noopener noreferrer"
-  //                 className="text-blue-600 hover:underline text-sm"
-  //               >
-  //                 👉 원문 기사 보기
-  //               </a>
-  //             </div>
-  //           )}
-  //         </div>
-  //       )}
-  //     </div>
-  //   </div>
-  // );
   return (
     <div className="min-h-screen bg-blue-gradient p-8 flex items-start justify-center">
       <NavBar />
@@ -127,9 +60,11 @@ export default function News() {
             {/* 요약 */}
             {result.summary && (
               <div className="bg-gray-50 p-4 rounded-lg shadow-inner border border-[#c7d6f8]">
-                <p className="text-gray-700 whitespace-pre-line leading-relaxed text-sm">
-                  {result.summary}
-                </p>
+                <div className="text-gray-700 leading-relaxed text-sm whitespace-pre-line">
+                  <ReactMarkdown>
+                    {result.summary}
+                  </ReactMarkdown>
+                </div>
               </div>
             )}
 
