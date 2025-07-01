@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 
 type Props = {
   onSubmit: (url: string) => void;
+  loading: boolean;
 };
 
-export default function UrlForm({onSubmit}: Props) {
+export default function UrlForm({ onSubmit, loading }: Props) {
   const [url, setUrl] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,15 +20,21 @@ export default function UrlForm({onSubmit}: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-x-2">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
       <input
-        className="border px-2 py-1 rounded w-96"
+        className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#8661C1] text-sm"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        placeholder="뉴스 URL 입력"
+        placeholder="네이버 뉴스 URL 입력"
+        disabled={loading}
       />
-      <button type="submit" className="bg-blue-500 text-white px-3 py-1 rounded">
-        분석
+      <button
+        type="submit"
+        disabled={loading}
+        className={`px-4 py-2 rounded-md text-sm text-white inline-flex items-center justify-center whitespace-nowrap
+          ${loading ? 'bg-gray-400 cursor-not-allowed' : 'btn-primary'}`}
+      >
+        {loading ? '분석 중...' : '분석'}
       </button>
     </form>
   );

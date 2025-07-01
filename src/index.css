@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+@layer utilities {
+    .bg-blue-gradient {
+        /*background: linear-gradient(90deg, rgb(36, 51, 116) 0%, rgb(43, 67, 173) 16.667%, rgb(49, 86, 218) 33.333%, rgb(57, 107, 244) 50%, rgb(64, 127, 248) 66.667%, rgb(72, 146, 231) 83.333%, rgb(79, 162, 193) 100%)*/
+        /*background: linear-gradient(90deg, rgb(217, 179, 226) 0%, rgb(210, 164, 227) 8.333%, rgb(202, 148, 226) 16.667%, rgb(193, 131, 225) 25%, rgb(182, 115, 222) 33.333%, rgb(170, 99, 218) 41.667%, rgb(157, 84, 213) 50%, rgb(144, 71, 206) 58.333%, rgb(131, 60, 199) 66.667%, rgb(117, 51, 191) 75%, rgb(105, 46, 183) 83.333%, rgb(93, 43, 174) 91.667%, rgb(82, 44, 164) 100%)*/
+        /*background: linear-gradient(90deg, rgb(0, 255, 196) 0%, rgb(0, 255, 188) 16.667%, rgb(0, 255, 179) 33.333%, rgb(0, 246, 170) 50%, rgb(0, 229, 161) 66.667%, rgb(0, 211, 152) 83.333%, rgb(0, 192, 143) 100%);*/
+        /*background: linear-gradient(45deg, rgb(65, 89, 208) 0%, rgb(200, 79, 192) 50%, rgb(255, 205, 112) 100%);*/
+        /*background: linear-gradient(45deg, rgb(35, 212, 253) 0%, rgb(58, 152, 240) 50%, rgb(183, 33, 255) 100%);*/
+        /*background: conic-gradient(from 45deg, rgb(35, 212, 253) 0deg, rgb(58, 152, 240) 180deg, rgb(183, 33, 255) 360deg);*/
+        /*background: conic-gradient(from 90deg, rgb(255, 222, 234) 0deg, rgb(253, 237, 255) 90deg, rgb(236, 252, 255) 180deg, rgb(209, 255, 255) 270deg, rgb(181, 255, 251) 360deg);*/
+        background: linear-gradient(45deg, rgb(35, 212, 253) 0%, rgb(58, 152, 240) 50%, rgb(183, 33, 255) 100%);
+        /*background: linear-gradient(62deg, rgb(255, 171, 126) 0%, rgb(255, 211, 102) 50%, rgb(247, 206, 104) 100%);*/
+        /*background: conic-gradient(from 62deg, rgb(246, 255, 123) 0deg, rgb(255, 216, 122) 180deg, rgb(255, 205, 40) 360deg)*/
+    }
+    .btn-primary {
+        @apply bg-[#4a4ecb] text-white font-semibold py-2 px-4 rounded transition
+        hover:bg-[#5c7bdb] hover:cursor-pointer
+        active:scale-95
+        disabled:bg-gray-300 disabled:text-white disabled:cursor-not-allowed;
+    }
+    .btn-secondary {
+        @apply bg-[#e0f0ff]
+        hover:bg-[#c6e4fb] text-[#3a98f0] text-sm font-medium py-2 px-4 rounded-md text-center transition hover:cursor-pointer;
+    }
+    .point-color {
+        color: #4a4ecb
+    }
+}

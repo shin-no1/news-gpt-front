@@ -123,100 +123,224 @@ export default function Signup() {
     }
   };
 
+  // return (
+  //   <div className="max-w-md mx-auto p-6 border rounded-2xl shadow-md">
+  //     <h2 className="text-2xl font-bold mb-4">회원가입</h2>
+  //
+  //     <input
+  //       className="w-full mb-1 px-4 py-2 border rounded"
+  //       placeholder="아이디 (닉네임)"
+  //       value={nickname}
+  //       onChange={(e) => setNickname(e.target.value.replace(/\s/g, ''))}
+  //     />
+  //     <p className={`text-sm mb-3 ${nickname ? (nicknameValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'}`}>
+  //       {nickname ? (nicknameValid ? '사용 가능한 아이디입니다.' : '아이디는 영문, 숫자, 밑줄(_) 조합 3~16자여야 합니다.') : '아이디를 입력해주세요.'}
+  //     </p>
+  //
+  //     <input
+  //       className="w-full mb-1 px-4 py-2 border rounded"
+  //       type="password"
+  //       placeholder="비밀번호"
+  //       value={password}
+  //       onChange={(e) => setPassword(e.target.value)}
+  //     />
+  //     <p className={`text-sm mb-2 ${password ? (passwordValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'}`}>
+  //       {password ? (passwordValid ? '' : '비밀번호는 영문 + 숫자 + 특수문자(@$!%*?&) 조합 8자 이상이어야 합니다.') : '비밀번호를 입력해주세요.'}
+  //     </p>
+  //
+  //     <input
+  //       className="w-full mb-1 px-4 py-2 border rounded"
+  //       type="password"
+  //       placeholder="비밀번호 확인"
+  //       value={passwordConfirm}
+  //       onChange={(e) => setPasswordConfirm(e.target.value)}
+  //     />
+  //     <p className={`text-sm mb-3 ${passwordConfirm ? (passwordsMatch ? 'text-green-600' : 'text-red-500') : 'text-gray-400'}`}>
+  //       {passwordConfirm ? (passwordsMatch ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.') : '비밀번호를 다시 입력해주세요.'}
+  //     </p>
+  //
+  //     <div className="flex gap-2 mb-2">
+  //       <input
+  //         className={`flex-1 px-4 py-2 border rounded ${codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
+  //         placeholder="이메일"
+  //         value={email}
+  //         onChange={(e) => setEmail(e.target.value.replace(/\s/g, ''))}
+  //         disabled={codeVerified}
+  //       />
+  //       <button
+  //         type="button"
+  //         onClick={sendEmailCode}
+  //         disabled={isSending || codeVerified || resendTimer > 0}
+  //         className={`text-white px-3 rounded ${
+  //           codeVerified || resendTimer > 0 || isSending
+  //             ? 'bg-gray-400 cursor-not-allowed'
+  //             : 'bg-green-500 hover:bg-green-600'
+  //         }`}
+  //       >
+  //         {codeVerified
+  //           ? '인증 완료'
+  //           : resendTimer > 0
+  //             ? `${resendTimer}초 후 재전송`
+  //             : '인증번호 받기'}
+  //       </button>
+  //     </div>
+  //     <p className="text-sm text-gray-500 mb-2">※ 이메일은 kakao.com / naver.com 만 가능합니다.</p>
+  //
+  //     {codeSent && (
+  //       <div className="mb-4">
+  //         <div className="flex gap-2 mb-1">
+  //           <input
+  //             className={`flex-1 px-4 py-2 border rounded ${codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
+  //             placeholder="인증번호 입력"
+  //             value={emailCode}
+  //             onChange={(e) => setEmailCode(e.target.value)}
+  //             disabled={codeVerified}
+  //           />
+  //           <button
+  //             type="button"
+  //             className={`px-3 rounded text-white ${codeVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500'}`}
+  //             onClick={verifyEmailCode}
+  //             disabled={codeVerified}
+  //           >
+  //             인증 확인
+  //           </button>
+  //         </div>
+  //         {verificationError && <p className="text-red-500 text-sm">{verificationError}</p>}
+  //         {codeVerified && <p className="text-green-600 text-sm">✅ 인증 완료</p>}
+  //       </div>
+  //     )}
+  //
+  //     <button
+  //       onClick={handleSignup}
+  //       disabled={!codeVerified}
+  //       className={`w-full py-2 rounded text-white font-bold ${codeVerified ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'}`}
+  //     >
+  //       가입하기
+  //     </button>
+  //   </div>
+  // );
   return (
-    <div className="max-w-md mx-auto p-6 border rounded-2xl shadow-md">
-      <h2 className="text-2xl font-bold mb-4">회원가입</h2>
+    <div className="min-h-screen bg-blue-gradient flex items-center justify-center">
+      <div className="bg-white w-full max-w-sm rounded-md px-8 py-10 text-center">
+        <div className="mb-6">
+          <div className="text-[32px] font-bold point-color mb-1">NewsGPT</div>
+          <h2 className="text-sm text-gray-600">Sign up for your account</h2>
+        </div>
 
-      <input
-        className="w-full mb-1 px-4 py-2 border rounded"
-        placeholder="아이디 (닉네임)"
-        value={nickname}
-        onChange={(e) => setNickname(e.target.value.replace(/\s/g, ''))}
-      />
-      <p className={`text-sm mb-3 ${nickname ? (nicknameValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'}`}>
-        {nickname ? (nicknameValid ? '사용 가능한 아이디입니다.' : '아이디는 영문, 숫자, 밑줄(_) 조합 3~16자여야 합니다.') : '아이디를 입력해주세요.'}
-      </p>
-
-      <input
-        className="w-full mb-1 px-4 py-2 border rounded"
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <p className={`text-sm mb-2 ${password ? (passwordValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'}`}>
-        {password ? (passwordValid ? '' : '비밀번호는 영문 + 숫자 + 특수문자(@$!%*?&) 조합 8자 이상이어야 합니다.') : '비밀번호를 입력해주세요.'}
-      </p>
-
-      <input
-        className="w-full mb-1 px-4 py-2 border rounded"
-        type="password"
-        placeholder="비밀번호 확인"
-        value={passwordConfirm}
-        onChange={(e) => setPasswordConfirm(e.target.value)}
-      />
-      <p className={`text-sm mb-3 ${passwordConfirm ? (passwordsMatch ? 'text-green-600' : 'text-red-500') : 'text-gray-400'}`}>
-        {passwordConfirm ? (passwordsMatch ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.') : '비밀번호를 다시 입력해주세요.'}
-      </p>
-
-      <div className="flex gap-2 mb-2">
-        <input
-          className={`flex-1 px-4 py-2 border rounded ${codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
-          placeholder="이메일"
-          value={email}
-          onChange={(e) => setEmail(e.target.value.replace(/\s/g, ''))}
-          disabled={codeVerified}
-        />
-        <button
-          type="button"
-          onClick={sendEmailCode}
-          disabled={isSending || codeVerified || resendTimer > 0}
-          className={`text-white px-3 rounded ${
-            codeVerified || resendTimer > 0 || isSending
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-green-500 hover:bg-green-600'
-          }`}
-        >
-          {codeVerified
-            ? '인증 완료'
-            : resendTimer > 0
-              ? `${resendTimer}초 후 재전송`
-              : '인증번호 받기'}
-        </button>
-      </div>
-      <p className="text-sm text-gray-500 mb-2">※ 이메일은 kakao.com / naver.com 만 가능합니다.</p>
-
-      {codeSent && (
-        <div className="mb-4">
-          <div className="flex gap-2 mb-1">
+        <div className="space-y-4 text-left text-sm">
+          <div>
             <input
-              className={`flex-1 px-4 py-2 border rounded ${codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
-              placeholder="인증번호 입력"
-              value={emailCode}
-              onChange={(e) => setEmailCode(e.target.value)}
+              placeholder="아이디 (닉네임)"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value.replace(/\s/g, ''))}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#8661C1]"
+            />
+            <p className={`${nickname ? (nicknameValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'} text-xs mt-1`}>
+              {nickname
+                ? nicknameValid
+                  ? '사용 가능한 아이디입니다.'
+                  : '아이디는 영문, 숫자, 밑줄(_) 조합 3~16자여야 합니다.'
+                : '아이디를 입력해주세요.'}
+            </p>
+          </div>
+
+          <div>
+            <input
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#8661C1]"
+            />
+            <p className={`${password ? (passwordValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'} text-xs mt-1`}>
+              {password
+                ? passwordValid
+                  ? ''
+                  : '영문 + 숫자 + 특수문자 조합 8자 이상'
+                : '비밀번호를 입력해주세요.'}
+            </p>
+          </div>
+
+          <div>
+            <input
+              type="password"
+              placeholder="비밀번호 확인"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#8661C1]"
+            />
+            <p className={`${passwordConfirm ? (passwordsMatch ? 'text-green-600' : 'text-red-500') : 'text-gray-400'} text-xs mt-1`}>
+              {passwordConfirm
+                ? passwordsMatch
+                  ? '비밀번호가 일치합니다.'
+                  : '비밀번호가 일치하지 않습니다.'
+                : '비밀번호를 다시 입력해주세요.'}
+            </p>
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              placeholder="이메일"
+              value={email}
+              onChange={(e) => setEmail(e.target.value.replace(/\s/g, ''))}
               disabled={codeVerified}
+              className={`flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#8661C1] ${
+                codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''
+              }`}
             />
             <button
               type="button"
-              className={`px-3 rounded text-white ${codeVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500'}`}
-              onClick={verifyEmailCode}
-              disabled={codeVerified}
+              onClick={sendEmailCode}
+              disabled={isSending || codeVerified || resendTimer > 0}
+              className={`text-white text-sm px-3 rounded btn-primary`}
             >
-              인증 확인
+              {codeVerified
+                ? '인증 완료'
+                : resendTimer > 0
+                  ? `${resendTimer}초 후 재전송`
+                  : '인증번호'}
             </button>
           </div>
-          {verificationError && <p className="text-red-500 text-sm">{verificationError}</p>}
-          {codeVerified && <p className="text-green-600 text-sm">✅ 인증 완료</p>}
-        </div>
-      )}
+          <p className="text-xs text-gray-500">※ 이메일은 kakao.com / naver.com 만 가능합니다.</p>
 
-      <button
-        onClick={handleSignup}
-        disabled={!codeVerified}
-        className={`w-full py-2 rounded text-white font-bold ${codeVerified ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'}`}
-      >
-        가입하기
-      </button>
+          {codeSent && (
+            <div className="flex gap-2 items-center">
+              <input
+                placeholder="인증번호"
+                value={emailCode}
+                onChange={(e) => setEmailCode(e.target.value)}
+                disabled={codeVerified}
+                className={`flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#8661C1] ${
+                  codeVerified ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''
+                }`}
+              />
+              <button
+                onClick={verifyEmailCode}
+                disabled={codeVerified}
+                className={`text-white px-3 rounded btn-primary`}
+              >
+                인증 확인
+              </button>
+            </div>
+          )}
+          {verificationError && <p className="text-red-500 text-xs mt-1">{verificationError}</p>}
+          {codeVerified && <p className="text-green-600 text-xs mt-1">✅ 인증 완료</p>}
+
+          <button
+            onClick={handleSignup}
+            disabled={!codeVerified}
+            className={`w-full mt-4 py-2 rounded text-white text-sm font-semibold btn-primary`}
+          >
+            가입하기
+          </button>
+        </div>
+
+        <div className="text-xs text-gray-500 mt-6">
+          Already have an account?{' '}
+          <a href="/login" className="text-[#8661C1] font-medium hover:underline">Log In</a>
+        </div>
+      </div>
     </div>
   );
+
 }
