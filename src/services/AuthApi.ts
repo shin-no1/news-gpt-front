@@ -1,11 +1,11 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-export async function loginApi(userId: string, password: string, deviceId: string) {
-  console.log(`${userId}, ${password}, ${deviceId}`);
+export async function loginApi(username: string, password: string, deviceId: string) {
+  console.log(`${username}, ${password}, ${deviceId}`);
   return await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, password, deviceId }),
+    body: JSON.stringify({ username, password, deviceId }),
   });
 }
 

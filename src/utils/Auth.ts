@@ -16,7 +16,7 @@ export async function handleLogout() {
     await logoutApi(accessToken, deviceId);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
     localStorage.removeItem('deviceId');
     window.location.href = '/';
   } catch {
@@ -36,10 +36,11 @@ export async function reissueToken(retryCallback?: () => void) {
       throw new Error(data.message || '알 수 없는 오류가 발생했습니다.');
     }
 
+    console.log("reissueToken");
     const data = await res.json();
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
-    localStorage.setItem('userId', data.userId);
+    localStorage.setItem('username', data.username);
 
     if (retryCallback) retryCallback(); // 토큰 재발급 성공했을 때만 재시도
   } catch {

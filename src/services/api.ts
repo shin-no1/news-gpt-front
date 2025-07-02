@@ -27,10 +27,10 @@ export async function verifyEmailCodeApi(email: string, code: string) {
   });
 }
 
-export async function signupApi(email: string, nickname: string, password: string) {
+export async function signupApi(email: string, username: string, password: string) {
   return await fetch(`${API_URL}/api/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, nickname, password }),
+    body: JSON.stringify({ email, username, password }),
   });
 }

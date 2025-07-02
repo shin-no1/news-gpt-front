@@ -5,7 +5,7 @@ import { sendEmailCodeApi, verifyEmailCodeApi, signupApi } from '../services/api
 export default function Signup() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [nickname, setNickname] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailCode, setEmailCode] = useState('');
@@ -14,7 +14,7 @@ export default function Signup() {
   const [verificationError, setVerificationError] = useState('');
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const [nicknameValid, setNicknameValid] = useState(false);
+  const [usernameValid, setUsernameValid] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
   const [isSending, setIsSending] = useState(false);
 
@@ -26,7 +26,7 @@ export default function Signup() {
     return regex.test(pw);
   };
 
-  const isNicknameValid = (name: string) => {
+  const isUsernameValid = (name: string) => {
     const regex = /^[a-zA-Z0-9_]{3,16}$/;
     return regex.test(name);
   };
@@ -34,8 +34,8 @@ export default function Signup() {
   useEffect(() => {
     setPasswordValid(isPasswordValid(password));
     setPasswordsMatch(password === passwordConfirm);
-    setNicknameValid(isNicknameValid(nickname));
-  }, [password, passwordConfirm, nickname]);
+    setUsernameValid(isUsernameValid(username));
+  }, [password, passwordConfirm, username]);
 
   useEffect(() => {
     if (resendTimer > 0 && !codeVerified) {
@@ -91,11 +91,11 @@ export default function Signup() {
   };
 
   const handleSignup = async () => {
-    if (!nickname || !email || !password || !passwordConfirm) {
+    if (!username || !email || !password || !passwordConfirm) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
-    if (!nicknameValid) {
+    if (!usernameValid) {
       alert('아이디 형식을 확인해주세요.');
       return;
     }
@@ -113,7 +113,7 @@ export default function Signup() {
     }
 
     try {
-      const res = await signupApi(email, nickname, password);
+      const res = await signupApi(email, username, password);
       if (!res.ok) {
         const data = await res.json();
         alert(data.message || '알 수 없는 오류가 발생했습니다.');
@@ -234,13 +234,13 @@ export default function Signup() {
           <div>
             <input
               placeholder="아이디 (닉네임)"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value.replace(/\s/g, ''))}
+              value={username}
+              onChange={(e) => setUsername(e.target.value.replace(/\s/g, ''))}
               className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#8661C1]"
             />
-            <p className={`${nickname ? (nicknameValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'} text-xs mt-1`}>
-              {nickname
-                ? nicknameValid
+            <p className={`${username ? (usernameValid ? 'text-green-600' : 'text-red-500') : 'text-gray-400'} text-xs mt-1`}>
+              {username
+                ? usernameValid
                   ? '사용 가능한 아이디입니다.'
                   : '아이디는 영문, 숫자, 밑줄(_) 조합 3~16자여야 합니다.'
                 : '아이디를 입력해주세요.'}

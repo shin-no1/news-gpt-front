@@ -4,7 +4,7 @@ import { loginApi } from '../services/AuthApi'
 import { getDeviceId } from '../utils/Auth';
 
 export function Login() {
-  const [userId, setUserId] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export function Login() {
   const handleLogin = async () => {
     try {
       const deviceId = getDeviceId();
-      const res = await loginApi(userId, password, deviceId);
+      const res = await loginApi(username, password, deviceId);
 
       if (!res.ok) {
         const data = await res.json();
@@ -23,7 +23,7 @@ export function Login() {
       const data = await res.json();
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
-      localStorage.setItem('userId', data.userId);
+      localStorage.setItem('username', data.username);
       navigate('/'); // 성공할 때만 이동
     } catch {
       alert('로그인 요청 중 오류가 발생했습니다.');
@@ -43,8 +43,8 @@ export function Login() {
             <input
               type="text"
               placeholder="Username"
-              value={userId}
-              onChange={e => setUserId(e.target.value)}
+              value={username}
+              onChange={e => setUsername(e.target.value)}
               className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#8661C1]"
             />
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">👤</span>

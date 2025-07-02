@@ -2,15 +2,13 @@ import { useEffect, useState } from 'react';
 import { handleLogout } from '../utils/Auth'
 
 export default function NavBar() {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    console.log(token);
-    const userIdFromStorage = localStorage.getItem('userId');
-    console.log(userIdFromStorage);
-    if (token && userIdFromStorage) {
-      setUserId(userIdFromStorage);
+    const usernameFromStorage = localStorage.getItem('username');
+    if (token && usernameFromStorage) {
+      setUsername(usernameFromStorage);
     }
   }, []);
 
@@ -20,9 +18,9 @@ export default function NavBar() {
         NewsGPT
       </a>
       <div className="flex items-center gap-4 text-sm">
-        {userId ? (
+        {username ? (
           <>
-            <span className="text-gray-700">👤 {userId}</span>
+            <span className="text-gray-700">👤 {username}</span>
             <button
               onClick={handleLogout}
               className="point-color hover:underline"

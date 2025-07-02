@@ -4,7 +4,7 @@ import NavBar from "./NavBar";
 import { handleLogout, reissueToken } from "../utils/Auth";
 
 export function Home() {
-  const [userId, setUserId] = useState('');
+  const [username, setUsername] = useState('');
   const [role, setRole] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
@@ -20,7 +20,7 @@ export function Home() {
       }
 
       const data = await res.json();
-      setUserId(data.userId);
+      setUsername(data.username);
       setRole(data.role);
       setIsLoggedIn(true);
     } catch (e: unknown) {
@@ -45,7 +45,7 @@ export function Home() {
         {isLoggedIn === true && (
           <>
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              환영합니다 <span className="text-[#6C4BA3]">{userId}</span>
+              환영합니다 <span className="text-[#6C4BA3]">{username}</span>
             </h2>
             <p className="text-sm text-gray-600 mb-8">
               권한: <span className="font-medium point-color">{role}</span>
