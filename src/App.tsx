@@ -3,6 +3,7 @@ import Signup from './pages/Signup';
 import News from './pages/News';
 import { Login } from './pages/Auth';
 import { Home } from './pages/Home';
+import { Me } from './pages/Me';
 import React from "react";
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/me" element={<Me />} />
       </Routes>
     </BrowserRouter>
   );
