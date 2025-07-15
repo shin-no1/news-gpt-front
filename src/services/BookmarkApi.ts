@@ -1,0 +1,60 @@
+// src/apis/BookmarkApi.ts
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
+export async function addBookmark(summaryHistoryId: number, groupId?: number) {
+  const accessToken = localStorage.getItem('accessToken');
+
+  // 기본 그룹 조회
+  let finalGroupId = groupId;
+  if (!groupId) {
+    const groupRes = await fetch(`${API_URL}/api/bookmark-groups`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!groupRes.ok) throw new Error('북마크 그룹 조회에 실패했습니다.');
+
+    const groups = await groupRes.json();
+    const defaultGroup = groups.find((g: any) => g.name === '기본');
+
+    if (!defaultGroup) throw new Error('기본 북마크 그룹이 존재하지 않습니다.');
+    finalGroupId = defaultGroup.id;
+  }
+
+  // 북마크 추가 요청
+  const res = await fetch(`${API_URL}/api/bookmarks`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      summaryHistoryId,
+      groupId: finalGroupId,
+    }),
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.message || '북마크 추가에 실패했습니다.');
+  }
+
+  return await res.json(); // { bookmarkId, groupId }
+}
+
+export async function getBookmarkGroups() {
+  const accessToken = localStorage.getItem('accessToken');
+  const res = await fetch(`${API_URL}/api/bookmark-groups`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!res.ok) throw new Error('그룹 목록 조회 실패');
+  return await res.json(); // [{ id, name, displayOrder }]
+}

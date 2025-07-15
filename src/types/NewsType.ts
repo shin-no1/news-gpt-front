@@ -4,4 +4,5 @@ export type NewsResultType = {
   topic: string;
   keywords: string[];
   url: string;
+  summaryHistoryId: number;
 };

@@ -1,14 +1,19 @@
+import React from 'react';
 import ReactMarkdown from "react-markdown";
 import { useState } from 'react';
 import UrlForm from '../components/UrlForm';
+import BookmarkGroupPopover from "../components/BookmarkGroupPopover";
 import { analyzeUrl } from '../services/api';
 import type { NewsResultType } from '../types/NewsType';
 import NavBar from "./NavBar";
 import { reissueToken } from "../utils/Auth";
+import { FaBookmark } from 'react-icons/fa';
 
 export default function News() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<NewsResultType | null>(null);
+  const [showPopover, setShowPopover] = useState(false);
+  const [popoverPos, setPopoverPos] = useState({ top: 0, left: 0 });
 
   const handleSubmit = async (url: string) => {
     setLoading(true);
@@ -37,6 +42,17 @@ export default function News() {
     }
   };
 
+  const handleBookmarkClick = (e: React.MouseEvent) => {
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+
+    setPopoverPos({
+      top: rect.bottom + window.scrollY + 6,
+      left: rect.left + window.scrollX,
+    });
+
+    setShowPopover(true);
+  };
+
   return (
     <div className="min-h-screen bg-blue-gradient p-8 flex items-start justify-center">
       <NavBar />
@@ -51,11 +67,33 @@ export default function News() {
 
         {result && (
           <div className="mt-6 space-y-6 border-t pt-6">
-            {/* 주제 */}
-            {result.topic && (
-              <p className="text-sm text-[#4a4ecb] mb-1 font-medium">
-                {result.topic}
-              </p>
+            {/* 주제 + 북마크 추가 버튼 한 줄 */}
+            <div className="flex items-center justify-between mb-1">
+              {/* 주제 텍스트 */}
+              {result.topic && (
+                <p className="text-sm text-[#4a4ecb] font-medium">
+                  {result.topic}
+                </p>
+              )}
+
+              {/* 북마크 추가 버튼 */}
+              {result.summaryHistoryId && (
+                <button
+                  onClick={handleBookmarkClick}
+                  className="flex items-center gap-1 text-xs font-medium px-3 py-[6px] rounded-md transition-colors cursor-pointer"
+                >
+                  북마크
+                  <FaBookmark className="text-yellow-400 text-lg" />
+                </button>
+              )}
+            </div>
+            {/* 북마크 팝오버 */}
+            {showPopover && result?.summaryHistoryId && (
+              <BookmarkGroupPopover
+                summaryHistoryId={result.summaryHistoryId}
+                onClose={() => setShowPopover(false)}
+                position={popoverPos}
+              />
             )}
 
             {/* 제목 */}
@@ -103,6 +141,17 @@ export default function News() {
                 </a>
               </div>
             )}
+
+            {/*/!* 북마크 추가 버튼 *!/*/}
+            {/*<div className="relative mt-4 flex justify-end">*/}
+            {/*  <button*/}
+            {/*    onClick={handleBookmarkClick}*/}
+            {/*    className="bg-[#4a6edb] hover:bg-[#3a5ed0] text-white text-sm font-medium px-4 py-2 rounded-md transition-colors cursor-pointer"*/}
+            {/*  >*/}
+            {/*    ⭐ 북마크 추가*/}
+            {/*  </button>*/}
+            {/*</div>*/}
+
           </div>
         )}
       </div>
