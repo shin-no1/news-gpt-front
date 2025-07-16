@@ -114,7 +114,7 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col items-center">
               <img
-                src="/screenshots/main.png"
+                src="../../screenshots/main.png"
                 alt="메인화면"
                 className="rounded-lg shadow-md border border-gray-200"
               />
@@ -122,7 +122,7 @@ export default function About() {
             </div>
             <div className="flex flex-col items-center">
               <img
-                src="/screenshots/login.png"
+                src="../../screenshots/login.png"
                 alt="로그인화면"
                 className="rounded-lg shadow-md border border-gray-200"
               />
@@ -130,7 +130,7 @@ export default function About() {
             </div>
             <div className="flex flex-col items-center">
               <img
-                src="/screenshots/signup.png"
+                src="../../screenshots/signup.png"
                 alt="회원가입화면"
                 className="rounded-lg shadow-md border border-gray-200"
               />
@@ -138,7 +138,7 @@ export default function About() {
             </div>
             <div className="flex flex-col items-center">
               <img
-                src="/screenshots/summary.png"
+                src="../../screenshots/summary.png"
                 alt="뉴스요약화면"
                 className="rounded-lg shadow-md border border-gray-200"
               />
@@ -146,7 +146,7 @@ export default function About() {
             </div>
             <div className="flex flex-col items-center">
               <img
-                src="/screenshots/me.png"
+                src="../../screenshots/me.png"
                 alt="회원화면"
                 className="rounded-lg shadow-md border border-gray-200"
               />
@@ -154,7 +154,7 @@ export default function About() {
             </div>
             <div className="flex flex-col items-center">
               <img
-                src="/screenshots/me_bookmark.png"
+                src="../../screenshots/me_bookmark.png"
                 alt="북마크화면"
                 className="rounded-lg shadow-md border border-gray-200"
               />
