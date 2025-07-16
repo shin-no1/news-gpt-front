@@ -115,3 +115,23 @@ export async function deleteBookmark(id: number) {
   }
   return await res.json();
 }
+
+export async function editBookmarkGroupName(bookmarkId: number, groupId: number | null, editGroupId: number) {
+  const accessToken = localStorage.getItem('accessToken');
+  const res = await fetch(`${API_URL}/api/bookmarks/${bookmarkId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      groupId: groupId,
+      afterGroupId: editGroupId
+    })
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.message || '북마크 이동에 실패했습니다.');
+  }
+  return await res.json();
+}

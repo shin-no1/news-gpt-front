@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getBookmarkGroups, getBookmarks, addBookmarkGroup, deleteBookmark } from '../../services/BookmarkApi';
+import {
+  getBookmarkGroups,
+  getBookmarks,
+  addBookmarkGroup,
+  deleteBookmark,
+  editBookmarkGroupName
+} from '../../services/BookmarkApi';
 import ReactMarkdown from 'react-markdown';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit } from 'react-icons/fi';
 import NavBar from "../NavBar";
 
 interface Bookmark {
@@ -30,6 +36,8 @@ export function Bookmarks() {
   const [newGroupName, setNewGroupName] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editBookmarkId, setEditBookmarkId] = useState<number | null>(null);
+  const [editGroupId, setEditGroupId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -40,7 +48,7 @@ export function Bookmarks() {
         if (data.length > 0) {
           setSelectedGroupId(data[0].id);
         }
-      } catch (e) {
+      } catch {
         alert('북마크 그룹을 불러오는 데 실패했습니다.');
       } finally {
         setLoading(false);
@@ -54,7 +62,7 @@ export function Bookmarks() {
     try {
       const data = await getBookmarks(groupId);
       setBookmarks(data);
-    } catch (e) {
+    } catch {
       alert('북마크 목록을 불러오는 데 실패했습니다.');
     } finally {
       setLoading(false);
@@ -75,7 +83,7 @@ export function Bookmarks() {
       setShowModal(false);
       const data = await getBookmarkGroups();
       setGroups(data);
-    } catch (e) {
+    } catch {
       alert('그룹 추가에 실패했습니다.');
     }
   };
@@ -87,8 +95,23 @@ export function Bookmarks() {
       setDeleteConfirm(true);
       if (selectedGroupId != null) fetchBookmarks(selectedGroupId);
       setTimeout(() => setDeleteConfirm(false), 3000);
-    } catch (e) {
+    } catch {
       alert('북마크 삭제에 실패했습니다.');
+    }
+  };
+
+  const handleEditBookmarkGroup = async () => {
+    if (editBookmarkId == null || editGroupId == null) return;
+    try {
+      const bookmark = bookmarks.find(b => b.id === editBookmarkId);
+      if (!bookmark) return;
+      console.log(editBookmarkId, selectedGroupId, editGroupId);
+      const updatedBookmarkList = await editBookmarkGroupName(editBookmarkId, selectedGroupId, editGroupId);
+      setBookmarks(updatedBookmarkList);
+      setEditBookmarkId(null);
+      setEditGroupId(null);
+    } catch {
+      alert('북마크 그룹 수정에 실패했습니다.');
     }
   };
 
@@ -154,12 +177,23 @@ export function Bookmarks() {
         <ul className="space-y-4 mb-14">
           {bookmarks.map((bookmark) => (
             <li key={bookmark.id} className="border p-4 rounded-md bg-white shadow-sm relative">
-              <button
-                onClick={() => handleDeleteBookmark(bookmark.id)}
-                className="absolute top-2 right-2 text-gray-400 hover:text-red-500"
-              >
-                <FiTrash2 />
-              </button>
+              <div className="absolute top-2 right-2 flex gap-2">
+                <button
+                  onClick={() => {
+                    setEditBookmarkId(bookmark.id);
+                    setEditGroupId(bookmark.groupId);
+                  }}
+                  className="text-gray-400 hover:text-green-500"
+                >
+                  <FiEdit />
+                </button>
+                <button
+                  onClick={() => handleDeleteBookmark(bookmark.id)}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <FiTrash2 />
+                </button>
+              </div>
               <p className="text-xs text-blue-600 mb-1 font-medium">{bookmark.topic}</p>
               <h3 className="text-base font-semibold mb-2">{bookmark.title}</h3>
               <div className="text-sm text-gray-700 whitespace-pre-line mb-2">
@@ -182,6 +216,41 @@ export function Bookmarks() {
           ))}
         </ul>
       )}
+
+      {/* 북마크 그룹 수정 모달 */}
+      <Transition appear show={editBookmarkId !== null} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setEditBookmarkId(null)}>
+          <div className="fixed inset-0 bg-black/20" aria-hidden="true" />
+          <div className="fixed inset-0 flex items-start justify-center mt-24 px-4">
+            <Dialog.Panel className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
+              <Dialog.Title className="text-lg font-semibold mb-4">북마크 그룹 수정</Dialog.Title>
+              <select
+                className="w-full border px-3 py-2 rounded-md text-sm mb-4"
+                value={editGroupId ?? ''}
+                onChange={(e) => setEditGroupId(Number(e.target.value))}
+              >
+                {groups.map((g) => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
+              </select>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setEditBookmarkId(null)}
+                  className="text-sm text-gray-500 hover:underline"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={handleEditBookmarkGroup}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
+                >
+                  수정
+                </button>
+              </div>
+            </Dialog.Panel>
+          </div>
+        </Dialog>
+      </Transition>
 
       <Transition appear show={showModal} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={() => {
