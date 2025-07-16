@@ -22,15 +22,15 @@ AI 기반 뉴스 요약 서비스 **NewsGPT**의 프론트엔드 레포지토리
 
 | 메인 화면 | 로그인 화면 |
 |-----------|-------------|
-| ![메인 화면](./screenshots/main.png) | ![로그인 화면](./screenshots/login.png) |
+| ![메인 화면](public/screenshots/main.png) | ![로그인 화면](public/screenshots/login.png) |
 
 | 회원가입 화면 | 뉴스 요약 결과 화면 |
 |----------------|---------------------|
-| ![회원가입 화면](./screenshots/signup.png) | ![요약 화면](./screenshots/summary.png) |
+| ![회원가입 화면](public/screenshots/signup.png) | ![요약 화면](public/screenshots/summary.png) |
 
 | 회원 화면 | 북마크 화면 |
 |----------------|---------------------|
-| ![회원 화면](./screenshots/me.png) | ![북마크 화면](./screenshots/me_bookmark.png) |
+| ![회원 화면](public/screenshots/me.png) | ![북마크 화면](public/screenshots/me_bookmark.png) |
 
 ---
 
