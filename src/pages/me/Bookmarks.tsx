@@ -29,9 +29,11 @@ export function Bookmarks() {
   const [showModal, setShowModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchGroups = async () => {
+      setLoading(true);
       try {
         const data = await getBookmarkGroups();
         setGroups(data);
@@ -40,17 +42,22 @@ export function Bookmarks() {
         }
       } catch (e) {
         alert('북마크 그룹을 불러오는 데 실패했습니다.');
+      } finally {
+        setLoading(false);
       }
     };
     fetchGroups();
   }, []);
 
   const fetchBookmarks = async (groupId: number) => {
+    setLoading(true);
     try {
       const data = await getBookmarks(groupId);
       setBookmarks(data);
     } catch (e) {
       alert('북마크 목록을 불러오는 데 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,6 +92,23 @@ export function Bookmarks() {
     }
   };
 
+  const renderSkeleton = () => (
+    <ul className="space-y-4">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <li key={i} className="border p-4 rounded-md bg-white shadow-sm animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
+          <div className="h-5 bg-gray-300 rounded w-3/4 mb-3"></div>
+          <div className="h-4 bg-gray-200 rounded mb-1"></div>
+          <div className="h-4 bg-gray-200 rounded mb-1 w-5/6"></div>
+          <div className="flex gap-2 mt-2">
+            <div className="h-4 w-16 bg-gray-200 rounded-full"></div>
+            <div className="h-4 w-20 bg-gray-200 rounded-full"></div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <div className="max-w-4xl mx-auto mt-24 px-4">
       <NavBar />
@@ -93,19 +117,28 @@ export function Bookmarks() {
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex gap-2 overflow-x-auto border-b pb-2">
-          {groups.map((group) => (
-            <button
-              key={group.id}
-              onClick={() => setSelectedGroupId(group.id)}
-              className={`px-3 py-1 text-sm rounded-full border hover:bg-blue-50 transition ${
-                selectedGroupId === group.id
-                  ? 'bg-blue-100 text-blue-700 border-blue-300'
-                  : 'text-gray-600 border-gray-300'
-              }`}
-            >
-              {group.name}
-            </button>
-          ))}
+          {groups.length === 0 ? (
+            Array.from({ length: 2 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-7 w-20 bg-gray-200 animate-pulse rounded-full"
+              ></div>
+            ))
+          ) : (
+            groups.map((group) => (
+              <button
+                key={group.id}
+                onClick={() => setSelectedGroupId(group.id)}
+                className={`px-3 py-1 text-sm rounded-full border hover:bg-blue-50 transition ${
+                  selectedGroupId === group.id
+                    ? 'bg-blue-100 text-blue-700 border-blue-300'
+                    : 'text-gray-600 border-gray-300'
+                }`}
+              >
+                {group.name}
+              </button>
+            ))
+          )}
         </div>
         <button
           onClick={() => setShowModal(true)}
@@ -115,7 +148,7 @@ export function Bookmarks() {
         </button>
       </div>
 
-      {bookmarks.length === 0 ? (
+      {loading ? renderSkeleton() : bookmarks.length === 0 ? (
         <p className="text-sm text-gray-500">해당 그룹에 북마크가 없습니다.</p>
       ) : (
         <ul className="space-y-4">
