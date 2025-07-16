@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Signup from './pages/Signup';
+import About from './pages/About';
 import News from './pages/News';
+import Signup from './pages/Signup';
 import { Login } from './pages/Auth';
 import { Home } from './pages/Home';
 import { Me } from './pages/Me';
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/news" element={<News />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/me" element={<Me />} />
