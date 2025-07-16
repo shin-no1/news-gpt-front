@@ -28,7 +28,7 @@ export function Me() {
       <div className="space-y-3">
         <button
           className="w-full text-left px-4 py-3 bg-gray-100 rounded-md hover:bg-gray-200 cursor-pointer"
-          onClick={() => (window.location.href = '/my-bookmarks')}
+          onClick={() => (window.location.href = '/me/bookmark')}
         >
           📁 북마크 보러가기
         </button>

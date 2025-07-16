@@ -4,6 +4,7 @@ import News from './pages/News';
 import { Login } from './pages/Auth';
 import { Home } from './pages/Home';
 import { Me } from './pages/Me';
+import { Bookmarks } from './pages/me/Bookmarks';
 import React from "react";
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/news" element={<News />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/me" element={<Me />} />
+        <Route path="/me/bookmark" element={<Bookmarks />} />
       </Routes>
     </BrowserRouter>
   );

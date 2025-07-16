@@ -1,4 +1,4 @@
-// src/apis/BookmarkApi.ts
+import { reissueToken } from "../utils/Auth";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -46,7 +46,7 @@ export async function addBookmark(summaryHistoryId: number, groupId?: number) {
   return await res.json(); // { bookmarkId, groupId }
 }
 
-export async function getBookmarkGroups() {
+export async function getBookmarkGroups(): Promise<any[]> {
   const accessToken = localStorage.getItem('accessToken');
   const res = await fetch(`${API_URL}/api/bookmark-groups`, {
     method: 'GET',
@@ -55,6 +55,63 @@ export async function getBookmarkGroups() {
       Authorization: `Bearer ${accessToken}`,
     },
   });
+
+  if (res.status === 401) {
+    let result: any[] = [];
+    await reissueToken(async () => {
+      result = await getBookmarkGroups();
+    });
+    return result;
+  }
+
   if (!res.ok) throw new Error('그룹 목록 조회 실패');
-  return await res.json(); // [{ id, name, displayOrder }]
+  return await res.json();
+}
+
+export async function getBookmarks(selectedGroupId: number) {
+  const accessToken = localStorage.getItem('accessToken');
+  const res = await fetch(`${API_URL}/api/bookmarks?groupId=${selectedGroupId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!res.ok) throw new Error('그룹 목록 조회 실패');
+  return await res.json();
+}
+
+export async function addBookmarkGroup(name: string) {
+  const accessToken = localStorage.getItem('accessToken');
+  const res = await fetch(`${API_URL}/api/bookmark-groups`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      name: name
+    }),
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.message || '그룹 추가에 실패했습니다.');
+  }
+  return await res.json();
+}
+
+export async function deleteBookmark(id: number) {
+  const accessToken = localStorage.getItem('accessToken');
+  const res = await fetch(`${API_URL}/api/bookmarks/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.message || '북마크 제거에 실패했습니다.');
+  }
+  return await res.json();
 }
