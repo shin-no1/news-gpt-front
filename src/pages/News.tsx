@@ -63,6 +63,18 @@ export default function News() {
 
         <UrlForm onSubmit={handleSubmit} loading={loading} />
 
+        {/* 분석 체험하기 */}
+        <div className="mt-4 text-center">
+          <button
+            onClick={() =>
+              handleSubmit("https://n.news.naver.com/mnews/article/028/0002756226")
+            }
+            className="text-sm text-blue-600 hover:underline hover:text-blue-800"
+          >
+            👉 분석 체험하기 (URL 자동입력)
+          </button>
+        </div>
+
         {loading && <p className="text-sm text-gray-500 mt-4">요약 중입니다...</p>}
 
         {result && (
@@ -141,16 +153,6 @@ export default function News() {
                 </a>
               </div>
             )}
-
-            {/*/!* 북마크 추가 버튼 *!/*/}
-            {/*<div className="relative mt-4 flex justify-end">*/}
-            {/*  <button*/}
-            {/*    onClick={handleBookmarkClick}*/}
-            {/*    className="bg-[#4a6edb] hover:bg-[#3a5ed0] text-white text-sm font-medium px-4 py-2 rounded-md transition-colors cursor-pointer"*/}
-            {/*  >*/}
-            {/*    ⭐ 북마크 추가*/}
-            {/*  </button>*/}
-            {/*</div>*/}
 
           </div>
         )}
