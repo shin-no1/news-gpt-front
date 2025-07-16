@@ -151,7 +151,7 @@ export function Bookmarks() {
       {loading ? renderSkeleton() : bookmarks.length === 0 ? (
         <p className="text-sm text-gray-500">해당 그룹에 북마크가 없습니다.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-4 mb-14">
           {bookmarks.map((bookmark) => (
             <li key={bookmark.id} className="border p-4 rounded-md bg-white shadow-sm relative">
               <button
