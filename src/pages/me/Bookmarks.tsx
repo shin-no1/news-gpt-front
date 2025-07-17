@@ -194,16 +194,16 @@ export function Bookmarks() {
         </div>
         <div className="flex gap-2 items-center">
           <button
-            onClick={() => setSelectionMode(!selectionMode)}
-            className="text-sm text-gray-600 border px-3 py-1 rounded hover:bg-gray-100"
-          >
-            {selectionMode ? '선택 취소' : '선택 모드'}
-          </button>
-          <button
             onClick={() => setShowModal(true)}
             className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
           >
             <FiPlus /> 그룹 추가
+          </button>
+          <button
+            onClick={() => setSelectionMode(!selectionMode)}
+            className="text-sm text-gray-600 border px-3 py-1 rounded hover:bg-gray-100"
+          >
+            {selectionMode ? '선택 취소' : '선택 모드'}
           </button>
         </div>
       </div>
