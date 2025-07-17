@@ -66,9 +66,18 @@ export default function News() {
         {/* 분석 체험하기 */}
         <div className="mt-4 text-center">
           <button
-            onClick={() =>
-              handleSubmit("https://n.news.naver.com/mnews/article/028/0002756226")
-            }
+            onClick={() => {
+              const urls = [
+                "https://n.news.naver.com/mnews/article/138/0002200854",
+                "https://n.news.naver.com/mnews/article/011/0004510254",
+                "https://n.news.naver.com/mnews/article/015/0005159146",
+                "https://n.news.naver.com/mnews/article/003/0013368582",
+                "https://n.news.naver.com/mnews/article/421/0008375699",
+                "https://n.news.naver.com/mnews/article/025/0003455716",
+              ];
+              const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+              handleSubmit(randomUrl);
+            }}
             className="text-sm text-blue-600 hover:underline hover:text-blue-800"
           >
             👉 분석 체험하기 (URL 자동입력)
