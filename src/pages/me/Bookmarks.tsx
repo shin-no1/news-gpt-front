@@ -200,7 +200,12 @@ export function Bookmarks() {
             <FiPlus /> 그룹 추가
           </button>
           <button
-            onClick={() => setSelectionMode(!selectionMode)}
+            onClick={() => {
+              setSelectionMode(!selectionMode)
+              if (selectionMode) {
+                setSelectedBookmarkIds([]);
+              }
+            }}
             className="text-sm text-gray-600 border px-3 py-1 rounded hover:bg-gray-100"
           >
             {selectionMode ? '선택 취소' : '선택 모드'}
