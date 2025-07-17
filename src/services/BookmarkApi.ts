@@ -1,4 +1,5 @@
 import { reissueToken } from "../utils/Auth";
+import { list } from "postcss";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -116,7 +117,7 @@ export async function deleteBookmark(id: number) {
   return await res.json();
 }
 
-export async function editBookmarkGroupName(bookmarkId: number, groupId: number | null, editGroupId: number) {
+export async function editBookmarkGroup(bookmarkId: number, groupId: number | null, editGroupId: number) {
   const accessToken = localStorage.getItem('accessToken');
   const res = await fetch(`${API_URL}/api/bookmarks/${bookmarkId}`, {
     method: 'PUT',
@@ -125,6 +126,27 @@ export async function editBookmarkGroupName(bookmarkId: number, groupId: number 
       Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
+      groupId: groupId,
+      afterGroupId: editGroupId
+    })
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.message || '북마크 이동에 실패했습니다.');
+  }
+  return await res.json();
+}
+
+export async function editBookmarksGroup(bookmarkIds: any, groupId: number | null, editGroupId: number) {
+  const accessToken = localStorage.getItem('accessToken');
+  const res = await fetch(`${API_URL}/api/bookmarks/group`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      bookmarkIds: bookmarkIds,
       groupId: groupId,
       afterGroupId: editGroupId
     })

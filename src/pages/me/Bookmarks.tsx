@@ -4,7 +4,7 @@ import {
   getBookmarks,
   addBookmarkGroup,
   deleteBookmark,
-  editBookmarkGroupName
+  editBookmarkGroup, editBookmarksGroup
 } from '../../services/BookmarkApi';
 import ReactMarkdown from 'react-markdown';
 import { Dialog, Transition } from '@headlessui/react';
@@ -38,6 +38,9 @@ export function Bookmarks() {
   const [loading, setLoading] = useState(false);
   const [editBookmarkId, setEditBookmarkId] = useState<number | null>(null);
   const [editGroupId, setEditGroupId] = useState<number | null>(null);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedBookmarkIds, setSelectedBookmarkIds] = useState<number[]>([]);
+  const [targetGroupId, setTargetGroupId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -72,6 +75,8 @@ export function Bookmarks() {
   useEffect(() => {
     if (selectedGroupId != null) {
       fetchBookmarks(selectedGroupId);
+      setSelectedBookmarkIds([]);
+      setSelectionMode(false);
     }
   }, [selectedGroupId]);
 
@@ -105,13 +110,37 @@ export function Bookmarks() {
     try {
       const bookmark = bookmarks.find(b => b.id === editBookmarkId);
       if (!bookmark) return;
-      console.log(editBookmarkId, selectedGroupId, editGroupId);
-      const updatedBookmarkList = await editBookmarkGroupName(editBookmarkId, selectedGroupId, editGroupId);
+      const updatedBookmarkList = await editBookmarkGroup(editBookmarkId, selectedGroupId, editGroupId);
       setBookmarks(updatedBookmarkList);
       setEditBookmarkId(null);
       setEditGroupId(null);
     } catch {
       alert('북마크 그룹 수정에 실패했습니다.');
+    }
+  };
+
+  const toggleBookmarkSelection = (id: number) => {
+    setSelectedBookmarkIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleBatchMove = async () => {
+    if (!targetGroupId || selectedBookmarkIds.length === 0) return;
+    try {
+      if (selectedGroupId === targetGroupId) {
+        alert("동일한 그룹으로는 이동할 수 없습니다.");
+        return;
+      }
+      setLoading(true);
+      const updatedBookmarkList = await editBookmarksGroup(selectedBookmarkIds, selectedGroupId, targetGroupId);
+      setBookmarks(updatedBookmarkList);
+    } catch {
+      alert('일괄 이동에 실패했습니다.');
+    } finally {
+      setSelectedBookmarkIds([]);
+      setSelectionMode(false);
+      setLoading(false);
     }
   };
 
@@ -163,57 +192,120 @@ export function Bookmarks() {
             ))
           )}
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
-        >
-          <FiPlus /> 그룹 추가
-        </button>
+        <div className="flex gap-2 items-center">
+          <button
+            onClick={() => setSelectionMode(!selectionMode)}
+            className="text-sm text-gray-600 border px-3 py-1 rounded hover:bg-gray-100"
+          >
+            {selectionMode ? '선택 취소' : '선택 모드'}
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+          >
+            <FiPlus /> 그룹 추가
+          </button>
+        </div>
       </div>
+
+      {selectionMode && (
+        <div className="mb-4 flex items-center gap-4 text-sm">
+          <span>선택된 북마크: {selectedBookmarkIds.length}개</span>
+          <button
+            onClick={() => setSelectedBookmarkIds([])}
+            className="text-gray-500 hover:underline"
+          >
+            선택 해제
+          </button>
+          <select
+            value={targetGroupId ?? ''}
+            onChange={(e) => setTargetGroupId(Number(e.target.value))}
+            className="border px-3 py-1 rounded text-sm"
+          >
+            <option value="">이동할 그룹 선택</option>
+            {groups.map(g => (
+              <option key={g.id} value={g.id}>{g.name}</option>
+            ))}
+          </select>
+          <button
+            onClick={handleBatchMove}
+            disabled={selectedBookmarkIds.length === 0 || !targetGroupId}
+            className="bg-blue-600 text-white text-sm px-4 py-1 rounded hover:bg-blue-700 disabled:opacity-50"
+          >
+            선택 항목 이동
+          </button>
+        </div>
+      )}
 
       {loading ? renderSkeleton() : bookmarks.length === 0 ? (
         <p className="text-sm text-gray-500">해당 그룹에 북마크가 없습니다.</p>
       ) : (
         <ul className="space-y-4 mb-14">
-          {bookmarks.map((bookmark) => (
-            <li key={bookmark.id} className="border p-4 rounded-md bg-white shadow-sm relative">
-              <div className="absolute top-2 right-2 flex gap-2">
-                <button
-                  onClick={() => {
-                    setEditBookmarkId(bookmark.id);
-                    setEditGroupId(bookmark.groupId);
-                  }}
-                  className="text-gray-400 hover:text-green-500"
-                >
-                  <FiEdit />
-                </button>
-                <button
-                  onClick={() => handleDeleteBookmark(bookmark.id)}
-                  className="text-gray-400 hover:text-red-500"
-                >
-                  <FiTrash2 />
-                </button>
-              </div>
-              <p className="text-xs text-blue-600 mb-1 font-medium">{bookmark.topic}</p>
-              <h3 className="text-base font-semibold mb-2">{bookmark.title}</h3>
-              <div className="text-sm text-gray-700 whitespace-pre-line mb-2">
-                <ReactMarkdown>{bookmark.summary}</ReactMarkdown>
-              </div>
-              <div className="flex flex-wrap gap-2 text-xs text-blue-600 mb-2">
-                {bookmark.keywords.map((k, i) => (
-                  <span key={i} className="bg-blue-50 px-2 py-1 rounded-full">#{k}</span>
-                ))}
-              </div>
-              <a
-                href={bookmark.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-500 hover:underline"
+          {bookmarks.map((bookmark) => {
+            const isSelected = selectedBookmarkIds.includes(bookmark.id);
+            return (
+              <li
+                key={bookmark.id}
+                onClick={() => {
+                  if (selectionMode) toggleBookmarkSelection(bookmark.id);
+                }}
+                className={`border p-4 rounded-md bg-white shadow-sm relative cursor-pointer transition duration-200 ${
+                  selectionMode && isSelected ? 'ring-2 ring-blue-400 bg-blue-50' : ''
+                }`}
               >
-                원문 기사 보기
-              </a>
-            </li>
-          ))}
+                <div className="absolute top-2 right-2 flex gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditBookmarkId(bookmark.id);
+                      setEditGroupId(bookmark.groupId);
+                    }}
+                    className="text-gray-400 hover:text-green-500"
+                  >
+                    <FiEdit />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteBookmark(bookmark.id);
+                    }}
+                    className="text-gray-400 hover:text-red-500"
+                  >
+                    <FiTrash2 />
+                  </button>
+                </div>
+                {selectionMode && (
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      toggleBookmarkSelection(bookmark.id);
+                    }}
+                    className="mb-2 mr-2"
+                  />
+                )}
+                <p className="text-xs text-blue-600 mb-1 font-medium">{bookmark.topic}</p>
+                <h3 className="text-base font-semibold mb-2">{bookmark.title}</h3>
+                <div className="text-sm text-gray-700 whitespace-pre-line mb-2">
+                  <ReactMarkdown>{bookmark.summary}</ReactMarkdown>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs text-blue-600 mb-2">
+                  {bookmark.keywords.map((k, i) => (
+                    <span key={i} className="bg-blue-50 px-2 py-1 rounded-full">#{k}</span>
+                  ))}
+                </div>
+                <a
+                  href={bookmark.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-500 hover:underline"
+                >
+                  원문 기사 보기
+                </a>
+              </li>
+            );
+          })}
         </ul>
       )}
 
